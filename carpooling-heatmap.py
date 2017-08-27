@@ -8,8 +8,6 @@ import random
 import warnings
 import collections as ct
 from scipy import stats
-import scipy.stats as st
-from scipy.stats import norm, rayleigh
 import seaborn as sns
 import matplotlib
 import matplotlib.pyplot as plt
