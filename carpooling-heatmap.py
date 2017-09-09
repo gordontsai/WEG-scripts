@@ -479,7 +479,7 @@ def carpooling(ubermodel,carmodel,timeworth,carprice,densityfactor,annualmiles=A
 
 #Actual heatmap
   # plt.figure(figsize=(9,9))
-  plt.title('Annual Miles = {:,}'.format(annualmiles) + ' , Dollar Per Mile = ${0:.2f}'.format(farepermile) + "Time Worth Per Hour = ${0:.2f}".format(timeworth)+' , Car Price = ${:,}'.format(carprice), size = 10)
+  plt.title("Annual Miles = {:,} , Dollar Per Mile = ${:.2f}\nTime Worth Per Hour = ${:.2f} , Car Price = ${:,}".format(annualmiles,farepermile,timeworth,carprice), size = 10)
   # plt.title('Annual Miles = {:,}'.format(annualmiles) + ' , Dollar Per Mile = ${0:.2f}'.format(farepermile)+'\n'+input_text, size = 10)
   ax = sns.heatmap(hm[:,0:15], vmin=-25,vmax=25,cmap='RdBu',cbar_kws={"orientation":"horizontal"},linecolor='Black',cbar=False)
   # ax = sns.heatmap(hm, annot=False, fmt="d", square = False, cmap = 'RdBu', center = 0, linecolor = 'Black',yticklabels=10, xticklabels=10, cbar_kws={"orientation": "horizontal"},vmin = -150000, vmax = 150000, cbar = False)
