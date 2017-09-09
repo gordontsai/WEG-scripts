@@ -448,7 +448,7 @@ Walk_Time_Avg = float(Walk_Time_Avg)
 #Val_Time_Annual_Car = (Val_Time_Daily_Car)*365
 #used in CarOwnership Function now
 
-def carpooling(ubermodel,carmodel,densityfactor,annualmiles=Annual_Miles_Avg,numtrips=Num_Trips_Avg,farebase=Fare_Base,farepermile=Fare_Per_Mile,farepermin=Fare_Per_Minute):
+def carpooling(ubermodel,carmodel,timeworth,carprice,densityfactor,annualmiles=Annual_Miles_Avg,numtrips=Num_Trips_Avg,farebase=Fare_Base,farepermile=Fare_Per_Mile,farepermin=Fare_Per_Minute):
 
 #Find Avg Uber Trip Cost
   Daily_Miles_Avg = annualmiles/365
@@ -479,7 +479,13 @@ def carpooling(ubermodel,carmodel,densityfactor,annualmiles=Annual_Miles_Avg,num
 
 #Actual heatmap
   # plt.figure(figsize=(9,9))
-  # plt.title('Annual Miles = {:,}'.format(Annual_Miles_Avg) + ' , Dollar Per Mile = ${0:.2f}'.format(inputvar[j][1]), size = 20)
+  input_text='Time Worth Per Hour = ${0:.2f}'.format(timeworth)+' , Car Price = ${:,}'.format(carprice)
+  print(input_text)
+  input_text=str(input_text)
+  print(input_text)
+  plt.suptitle(input_text,size=10)
+  # plt.title('Annual Miles = {:,}'.format(annualmiles) + ' , Dollar Per Mile = ${0:.2f}'.format(farepermile) + 'Time Worth Per Hour = ${0:.2f}'.format(float(timeworth))+' , '+'Car Price'+ ' = ${:,}'.format(int(carprice)), size = 10)
+  plt.title('Annual Miles = {:,}'.format(annualmiles) + ' , Dollar Per Mile = ${0:.2f}'.format(farepermile)+'\n'+input_text, size = 10)
   ax = sns.heatmap(hm[:,0:15], vmin=-25,vmax=25,cmap='RdBu',cbar_kws={"orientation":"horizontal"},linecolor='Black',cbar=False)
   # ax = sns.heatmap(hm, annot=False, fmt="d", square = False, cmap = 'RdBu', center = 0, linecolor = 'Black',yticklabels=10, xticklabels=10, cbar_kws={"orientation": "horizontal"},vmin = -150000, vmax = 150000, cbar = False)
   # ax.set_xticklabels(['${}'.format(int(i.get_text())/ 1000) for i in ax.get_xticklabels()])
@@ -492,18 +498,22 @@ def carpooling(ubermodel,carmodel,densityfactor,annualmiles=Annual_Miles_Avg,num
   # ax.set_yticklabels(test,rotation=0)
   # ax.set_yticklabels(densityfactor)
   # ax.set_yticklabels(ax.yaxis.get_majorticklabels(), rotation=0)
-  plt.rc('xtick', labelsize=20)
-  plt.rc('ytick', labelsize=20)
-  plt.xlabel('Years', size = 20 )
-  plt.ylabel('Density Factor', size = 20)
+  plt.rc('xtick', labelsize=25)
+  plt.rc('ytick', labelsize=25)
+  plt.xlabel('Years', size = 10 )
+  plt.ylabel('Density Factor', size = 10)
   # plt.savefig(image_output+'Carpool Heat Map'+'.png', bbox_inches='tight')
   plt.savefig(image_output+'Carpool Heat Map.png')
 
 def main():
+  timeworth=14
+  carprice=2000
+  annualmiles=15000
+  numtrips=3
 
-  (car_output,a,b,car_matrix) = Car_Ownership_Expense_Model(timeworth = 14,carprice= 20000,annualmiles=15000,numtrips=3)
-  (uber_output,uber_matrix) = Uber_Expense_Model(timeworth = 14,carprice= 20000,annualmiles=15000,numtrips=3,annualroi=2)
-  carpooling(annualmiles=15000,numtrips=3,ubermodel=uber_matrix,carmodel=car_matrix,densityfactor=np.arange(1,3.05,.05))
+  (car_output,a,b,car_matrix) = Car_Ownership_Expense_Model(timeworth = timeworth,carprice= carprice,annualmiles=annualmiles,numtrips=numtrips)
+  (uber_output,uber_matrix) = Uber_Expense_Model(timeworth=timeworth,carprice=carprice,annualmiles=annualmiles,numtrips=numtrips,annualroi=2)
+  carpooling(carprice=carprice,timeworth=timeworth,annualmiles=annualmiles,numtrips=3,ubermodel=uber_matrix,carmodel=car_matrix,densityfactor=np.arange(1,3.05,.05))
 
 if __name__ == "__main__":
   main()
