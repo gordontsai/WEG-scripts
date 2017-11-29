@@ -479,8 +479,8 @@ def carpooling(ubermodel,carmodel,timeworth,carprice,densityfactor,annualmiles=A
 
 #Actual heatmap
   # plt.figure(figsize=(9,9))
-  plt.title("Annual Miles = {:,} , Dollar Per Mile = ${:.2f}\nTime Worth Per Hour = ${:.2f} , Car Price = ${:,}".format(annualmiles,farepermile,timeworth,carprice), size = 10)
-  # plt.title('Annual Miles = {:,}'.format(annualmiles) + ' , Dollar Per Mile = ${0:.2f}'.format(farepermile)+'\n'+input_text, size = 10)
+  plt.title("Annual Miles = {:,} , Dollar Per Mile = ${:.2f}\nTime Worth Per Hour = ${:.2f} , Car Price = \${:,}".format(10000,farepermile,timeworth,carprice), size = 10)
+  # plt.title('Annual Miles = {:,}'.format(annualmiles) + ' , Dollar Per Mile = ${1:.2f}'.format(farepermile)+'\n'+input_text, size = 10)
   ax = sns.heatmap(hm[:,0:15], vmin=-25,vmax=25,cmap='RdBu',cbar_kws={"orientation":"horizontal"},linecolor='Black',cbar=False)
   # ax = sns.heatmap(hm, annot=False, fmt="d", square = False, cmap = 'RdBu', center = 0, linecolor = 'Black',yticklabels=10, xticklabels=10, cbar_kws={"orientation": "horizontal"},vmin = -150000, vmax = 150000, cbar = False)
   # ax.set_xticklabels(['${}'.format(int(i.get_text())/ 1000) for i in ax.get_xticklabels()])
@@ -502,8 +502,8 @@ def carpooling(ubermodel,carmodel,timeworth,carprice,densityfactor,annualmiles=A
 
 def main():
   timeworth=14
-  carprice=2000
-  annualmiles=15000
+  carprice=20000
+  annualmiles=9855
   numtrips=3
 
   (car_output,a,b,car_matrix) = Car_Ownership_Expense_Model(timeworth = timeworth,carprice= carprice,annualmiles=annualmiles,numtrips=numtrips)
