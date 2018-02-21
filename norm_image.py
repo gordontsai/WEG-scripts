@@ -7,16 +7,27 @@ cwd=os.getcwd()
 im_path=cwd+'/images/'
 
 
-im=Image.open(im_path+'/Rideshare Heat Map 5.png')
+im=Image.open(im_path+'/Rideshare Heat Map 8.png')
+pixels=im.load()
 
 
-box = (100, 100, 400, 400)
-region = im.crop(box)
+# upper left corner of graph
+pixels[117,37]=(255,0,0)
+# Lower left corner of graph
+pixels[117,733]=(255,0,0)
+# upper right corner of graph
+pixels[813,37]=(255,0,0)
+# Lower right corner of graph
+pixels[813,733]=(255,0,0)
+im.show()
 
-region.show()
-rg=region.resize((300,50))
+# box = (100, 100, 400, 400)
+# region = im.crop(box)
 
-rg.show()
+# region.show()
+# rg=region.resize((300,50))
+
+# rg.show()
 
 
 
