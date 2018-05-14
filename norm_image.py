@@ -3,6 +3,52 @@ import os
 from dimensions import dim
 
 
+#Pass in object from im.load() and left, right, up down coordinates
+#this marks the four corners of the box as black
+def mark_image(pixels,left,right,up,down):
+  pixels[left,up]=(0,0,0)
+  pixels[left,down]=(0,0,0)
+  pixels[right,up]=(0,0,0)
+  pixels[right,down]=(0,0,0)
+
+
+#Boxes is a list of the 100 images cut
+#dim is read in with distributions for the x and y axis
+## dim is car price distribution then time_worth distribution, which is dim_x
+##then dim_y
+def resize_boxes(im,boxes,d):
+  boxes_resized=[]
+
+  for row in enumerate(boxes):
+    boxes_resized_row=[]
+    for box in enumerate(row[1]):
+      x_new=int(round(im.size[0]*dim[0][box[0]],0))
+      y_new=int(round(im.size[1]*dim[1][row[0]],0))
+      boxes_resized_row.append(box[1].resize((x_new,y_new)))
+    boxes_resized.append(boxes_resized_row)
+
+  return boxes_resized
+
+
+      # x_new=int(round(im.size[0]*dim[0][0]))
+      # y_new=int(round(im.size[1]*dim[1][0],0))
+      # boxes_resized_row.append(boxes[0].resize((x_new,y_new)))
+    # boxes_resized.append(boxes_resized_row)
+
+
+
+
+  # x_new=int(round(im.size[0]*dim[0][0]))
+  # y_new=int(round(im.size[1]*dim[1][0],0))
+  # boxes_resized.append(boxes[0].resize((x_new,y_new)))
+  # boxes_resized[0].show()
+
+
+
+
+
+
+
 os.chdir('..')
 cwd=os.getcwd()
 im_path=cwd+'/images/'
@@ -50,10 +96,10 @@ orig_box=(left_bnd,upper_bnd,right_bnd,lower_bnd)
 
 #store the ten boxes
 box_num=1
+box_list=[]
 for y in range(10):
-  box_list=[]
+  box_row=[]
   for x in range(10):
-
     if x==9 and y==9:
       left=left_bnd+xstep*(x)
       up=upper_bnd+ystep*(y)
@@ -74,36 +120,16 @@ for y in range(10):
       up=upper_bnd+ystep*(y)
       right=left_bnd+xstep*(x+1)
       down=upper_bnd+ystep*(y+1)
-
     box=(left,up,right,down)
     # print('box ',str(box_num),box)
     region=im.crop(box)
-    pixels[left,up]=(0,0,0)
-    pixels[left,down]=(0,0,0)
-    pixels[right,up]=(0,0,0)
-    pixels[right,down]=(0,0,0)
-
-    #assign to list in order
-    box_list.append(region)
+    #Use this function to check if it has marked and saved the right boxes
+    # mark_image(pixels,left,right,up,down)
+    #assign row to a list
+    box_row.append(region)
     #iterate
     box_num+=1
-
-im.show()
-
-#display boxes
-# for img in box_list:
-  # img.show()
+  box_list.append(box_row)
 
 
-print(sum(dim[0]))
-# box = (100, 100, 400, 400)
-# region = im.crop(box)
-
-# region.show()
-# rg=region.resize((300,50))
-
-# rg.show()
-
-
-
-
+resize_boxes(im,box_list,dim)
