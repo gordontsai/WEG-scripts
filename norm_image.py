@@ -24,6 +24,7 @@ def get_boxes_size(boxes):
   box_list=[]
   for row in enumerate(boxes):
     box_row=[]
+
     for box in enumerate(row[1]):
       box_row.append(box[1].size)
     box_list.append(box_row)
