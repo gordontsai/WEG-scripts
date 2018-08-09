@@ -1,4 +1,24 @@
 from defaultVariables import *
+import numpy as np
+import math
+
+#####################################################################################################################
+def Depreciation(initialrate,rate,years = Model_Length):
+    years = int(math.ceil(years))
+    array = np.zeros((1,years))
+    initialrate = initialrate/100.0
+    rate = rate/100.0
+    totalpercent = 1.0
+    for i in range(0,(array.size)):
+        if initialrate>.1:
+            array[0][i] = totalpercent*(1-initialrate)
+            initialrate = initialrate - rate
+            totalpercent= array[0][i]
+        else:
+            array[0][i] = totalpercent*(1-.1)
+            totalpercent= array[0][i]
+    return array
+
 
 def Amortization(mnth = 12,loanterms= Loan_Terms, ir = MIR,carprice= Car_Price, downpmnt = Down_Payment):
     loan = carprice-downpmnt #as $
@@ -56,7 +76,7 @@ def Uber_Expense_Model(outputyears = (7,10,15,20), annualroi = 5,
     Uber_Exp_Daily =  Uber_Trip_Avg*Num_Trips_Avg
     annualexpense = Uber_Exp_Daily*365
 
-    a,OUP_Expense_Car,Cum_Expense_Car = Car_Ownsership_Expense_Model(annualmiles=annualmiles,timeworth=timeworth, carprice= carprice)
+    a,OUP_Expense_Car,Cum_Expense_Car = Car_Ownership_Expense_Model(annualmiles=annualmiles,timeworth=timeworth, carprice= carprice)
     #Convert annualroi to float
     annualroi = float(annualroi)
 
@@ -110,7 +130,7 @@ def Uber_Expense_Model(outputyears = (7,10,15,20), annualroi = 5,
 
 
 #####################################################################################################################
-def Car_Ownsership_Expense_Model(outputyears = (7,10,15,20), n = [7,10,15,20], purchasefees = Purchase_Fees,
+def Car_Ownership_Expense_Model(outputyears = (7,10,15,20), n = [7,10,15,20], purchasefees = Purchase_Fees,
                                  downpmnt = Down_Payment,ide = Total_IDE, timeworth= Time_Worth,
                                  annualmiles = Annual_Miles_Avg, loanterms = Loan_Terms,
      years= Model_Length,carprice = Car_Price, milespergallon = MPG, triptime = Trip_Time_Avg,
@@ -214,19 +234,3 @@ def Car_Ownsership_Expense_Model(outputyears = (7,10,15,20), n = [7,10,15,20], p
 
 
 
-#####################################################################################################################
-def Depreciation(initialrate,rate,years = Model_Length):
-    years = int(math.ceil(years))
-    array = np.zeros((1,years))
-    initialrate = initialrate/100.0
-    rate = rate/100.0
-    totalpercent = 1.0
-    for i in range(0,(array.size)):
-        if initialrate>.1:
-            array[0][i] = totalpercent*(1-initialrate)
-            initialrate = initialrate - rate
-            totalpercent= array[0][i]
-        else:
-            array[0][i] = totalpercent*(1-.1)
-            totalpercent= array[0][i]
-    return array
