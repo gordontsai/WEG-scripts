@@ -79,6 +79,8 @@ def Uber_Expense_Model(outputyears = (7,10,15,20), annualroi = 5,
     Uber_Exp_Daily =  Uber_Trip_Avg*Num_Trips_Avg
     annualexpense = Uber_Exp_Daily*365
 
+    #OUPE_Epense_car = Annual Out of Pocket Expense
+    #Cum Expense Car = Cumulative Out of Pocket Expense
     a,OUP_Expense_Car,Cum_Expense_Car = Car_Ownership_Expense_Model(subsidy=subsidy,annualmiles=annualmiles,timeworth=timeworth, carprice= carprice)
     #Convert annualroi to float
     annualroi = float(annualroi)
@@ -241,7 +243,7 @@ def Car_Ownership_Expense_Model(outputyears = (7,10,15,20), n = [7,10,15,20], pu
 
 
 
-def simulate(Annual_Miles_Avg,Car_Price,Time_Worth,Trip_Time_Avg,simsize=1000,model_year=7):
+def simulate(Annual_Miles_Avg,Car_Price,Time_Worth,Trip_Time_Avg,simsize=1000,model_year=7,subsidy=0):
   #Monte Carlo Simulation
   if len(Annual_Miles_Avg)==1:
     print("Annual_Miles_Avg is not a list.")
@@ -257,8 +259,8 @@ def simulate(Annual_Miles_Avg,Car_Price,Time_Worth,Trip_Time_Avg,simsize=1000,mo
   Car_NPV = []
   Uber_NPV = []
   for i in range(0,simsize):
-    a,b,c = Car_Ownership_Expense_Model(outputyears=output_year,annualmiles = Annual_Miles_Avg[i],carprice=Car_Price[i],timeworth= Time_Worth[i], triptime= Trip_Time_Avg[i])
-    d = Uber_Expense_Model(outputyears= output_year,timeworth=Time_Worth[i],annualmiles=Annual_Miles_Avg[i],carprice = Car_Price[i],triptime= Trip_Time_Avg[i])
+    a,b,c = Car_Ownership_Expense_Model(subsidy=subsidy,outputyears=output_year,annualmiles = Annual_Miles_Avg[i],carprice=Car_Price[i],timeworth= Time_Worth[i], triptime= Trip_Time_Avg[i])
+    d = Uber_Expense_Model(subsidy=subsidy,outputyears= output_year,timeworth=Time_Worth[i],annualmiles=Annual_Miles_Avg[i],carprice = Car_Price[i],triptime= Trip_Time_Avg[i])
     Car_NPV.append(a)
     Uber_NPV.append(d)
 

@@ -39,3 +39,22 @@ def to_percent(y, position):
         return s + r'$\%$'
     else:
         return s + '%'
+
+
+def get_decision_percent(Decision):
+  Uber_wins = 0
+  Car_wins = 0
+
+  for i in range(0,len(Decision)):
+    if Decision[i] < 0:
+      Car_wins += 1
+    else:
+      Uber_wins += 1
+
+  Uber_percent = float(Uber_wins)/len(Decision)
+  Car_percent = float(Car_wins)/len(Decision)
+
+  print(Uber_percent, 'of the US is better off Ubering')
+  print(Car_percent, 'of the US is better off Car Owning')
+
+  return {'uber':Uber_percent,'car':Car_percent}
