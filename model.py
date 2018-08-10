@@ -1,6 +1,9 @@
-from defaultVariables import *
 import numpy as np
 import math
+
+from defaultVariables import *
+from helper import selectModel, avgMPH, to_percent
+
 
 #####################################################################################################################
 def Depreciation(initialrate,rate,years = Model_Length):
@@ -62,7 +65,7 @@ def Amortization(mnth = 12,loanterms= Loan_Terms, ir = MIR,carprice= Car_Price, 
 def Uber_Expense_Model(outputyears = (7,10,15,20), annualroi = 5,
                        farebase = Fare_Base, farepermile = Fare_Per_Mile, farepermin = Fare_Per_Minute,
                        annualmiles = Annual_Miles_Avg, triptime = Trip_Time_Avg, numtrips = Num_Trips_Avg,
-                       timeworth= Time_Worth, waittime = Wait_Time_Uber_Avg, carprice = Car_Price):
+                       timeworth= Time_Worth, waittime = Wait_Time_Uber_Avg, carprice = Car_Price,subsidy=subsidy):
     #Calc Val_Time_Annual_Uber
     Val_Time_Daily_Uber = (waittime*numtrips)/60*timeworth
     valuetime = Val_Time_Daily_Uber*365
@@ -76,7 +79,7 @@ def Uber_Expense_Model(outputyears = (7,10,15,20), annualroi = 5,
     Uber_Exp_Daily =  Uber_Trip_Avg*Num_Trips_Avg
     annualexpense = Uber_Exp_Daily*365
 
-    a,OUP_Expense_Car,Cum_Expense_Car = Car_Ownership_Expense_Model(annualmiles=annualmiles,timeworth=timeworth, carprice= carprice)
+    a,OUP_Expense_Car,Cum_Expense_Car = Car_Ownership_Expense_Model(subsidy=subsidy,annualmiles=annualmiles,timeworth=timeworth, carprice= carprice)
     #Convert annualroi to float
     annualroi = float(annualroi)
 
@@ -136,7 +139,7 @@ def Car_Ownership_Expense_Model(outputyears = (7,10,15,20), n = [7,10,15,20], pu
      years= Model_Length,carprice = Car_Price, milespergallon = MPG, triptime = Trip_Time_Avg,
          fuelprice = Fuel_Price, numtrips = Num_Trips_Avg, taxpercent = Sales_Tax_Percent,
          maintenance = Maint_Repairs_Exp, insurance = Insurance_Exp,registrationtaxes = Registr_Taxes_Exp,
-        parking = Parking_Exp):
+        parking = Parking_Exp,subsidy=subsidy):
 
 
     Fuel_Exp = annualmiles/milespergallon*fuelprice
@@ -160,11 +163,14 @@ def Car_Ownership_Expense_Model(outputyears = (7,10,15,20), n = [7,10,15,20], pu
 
 
     loanyears = loanterms/12
-    array = np.zeros((13,years))
+    array = np.zeros((14,years))
     [rows,columns] = array.shape
     [a,b,c,d,e,f,g] = Amortization(mnth=12,carprice=carprice)
     Principal_Incr = f
     Interest_Incr = d
+
+    #assign subsidy to end of array
+    array[13]=[subsidy for i in range(columns)]
 
     #Test
     #print(a,b,c,de,f,g)
@@ -211,7 +217,8 @@ def Car_Ownership_Expense_Model(outputyears = (7,10,15,20), n = [7,10,15,20], pu
             array[8,i]=array[7,i]+array[8,i-1]
 
     #Total Annual Expense for Owning and Cum. Expense for Owning
-    array[9] = array[7] +array[5]
+    # array[14] is subsidy
+    array[9] = array[7] +array[5]+array[13]
     for i in range(0,columns):
         if i==0:
             array[10,i]=array[9,i]
@@ -234,3 +241,27 @@ def Car_Ownership_Expense_Model(outputyears = (7,10,15,20), n = [7,10,15,20], pu
 
 
 
+def simulate(Annual_Miles_Avg,Car_Price,Time_Worth,Trip_Time_Avg,simsize=1000,model_year=7):
+  #Monte Carlo Simulation
+  if len(Annual_Miles_Avg)==1:
+    print("Annual_Miles_Avg is not a list.")
+  elif len(Car_Price)==1:
+    print("Car_Price is not a list.")
+  elif len(Time_Worth)==1:
+    print("Time_Worth is not a list.")
+  elif len(Trip_Time_Avg)==1:
+    print("Trip_Time_Avg is not a list.")
+
+  output_year = (model_year,)
+  Decision = np.array([])
+  Car_NPV = []
+  Uber_NPV = []
+  for i in range(0,simsize):
+    a,b,c = Car_Ownership_Expense_Model(outputyears=output_year,annualmiles = Annual_Miles_Avg[i],carprice=Car_Price[i],timeworth= Time_Worth[i], triptime= Trip_Time_Avg[i])
+    d = Uber_Expense_Model(outputyears= output_year,timeworth=Time_Worth[i],annualmiles=Annual_Miles_Avg[i],carprice = Car_Price[i],triptime= Trip_Time_Avg[i])
+    Car_NPV.append(a)
+    Uber_NPV.append(d)
+
+    Decision=np.append(Decision,a[0]-d)
+
+  return Decision

@@ -1,4 +1,6 @@
 import matplotlib
+import numpy as np
+
 
 ###Feed in dictionary of model distributions and the model number you want, spits out the model
 def selectModel(model_dict,model_number): #model_number goes from 1-5, 1 being best, 5 being worst
